@@ -22,8 +22,31 @@ const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
 
 const container = document.getElementById("wishlist");
 if(wishlist.length === 0){
-    container.innerHTML = "<p style='text-align:center;'>No items in wishlist</p>";
-} else {
+
+    container.innerHTML = `
+
+    <div class="empty-cart">
+
+        <img style="Width:650px;"
+        src="images/emptywishlist.png"
+        alt="Empty Wishlist">
+
+        <h2>Your Wishlist is Empty</h2>
+
+        <p>
+            Save your favorite products here and shop later.
+        </p>
+
+        <button onclick="goHome()" class="continue-btn">
+            Explore Products
+        </button>
+
+    </div>
+
+    `;
+
+}
+ else {
     wishlist.forEach(product => {
         const stars = getStars(product.rating);
         container.innerHTML += `
@@ -95,7 +118,7 @@ function moveToCart(id){
     location.reload();
 }
 function goHome(){
-    window.location.href = "Main.html";
+    window.location.href = "index.html";
 }
 </script>
 

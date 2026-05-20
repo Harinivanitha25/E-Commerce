@@ -323,6 +323,10 @@ body{
     cursor:pointer;
     transition:0.3s;
 }
+#wishlist:has(.empty-cart){
+    display:block;
+    width:100%;
+}
 
 .wishlist:hover{
     transform:scale(1.2);
@@ -539,7 +543,7 @@ footer{
 }
 
 .empty-cart h2{
-    font-size:40px;
+    font-size:38px;
     line-height:1.1;
     color:#111827;
     margin-bottom:15px;
