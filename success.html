@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Placed</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:-apple-system, BlinkMacSystemFont, sans-serif;
+    background:#f7f7f7;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.success-container{
+    background:white;
+    padding:50px 40px;
+    border-radius:25px;
+    text-align:center;
+    width:90%;
+    max-width:500px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.success-container img{
+    width:250px;
+    margin-bottom:25px;
+}
+
+.success-container h1{
+    font-size:36px;
+    color:#111827;
+    margin-bottom:15px;
+}
+
+.success-container p{
+    color:#666;
+    font-size:18px;
+    margin-bottom:30px;
+    line-height:1.5;
+}
+
+.home-btn{
+    background:#111827;
+    color:white;
+    border:none;
+    padding:14px 35px;
+    border-radius:40px;
+    font-size:16px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.home-btn:hover{
+    background:black;
+}
+
+@media(max-width:600px){
+
+    .success-container{
+        padding:35px 20px;
+    }
+
+    .success-container img{
+        width:180px;
+    }
+
+    .success-container h1{
+        font-size:28px;
+    }
+
+    .success-container p{
+        font-size:16px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="success-container">
+
+    <img src="images/success.png">
+
+    <h1>Order Placed Successfully!</h1>
+
+    <p>
+        Thank you for shopping with us.
+        Your order has been confirmed.
+    </p>
+
+    <button class="home-btn" onclick="goHome()">
+        Back To Home
+    </button>
+
+</div>
+
+<script>
+
+function goHome(){
+
+    window.location.href = "Main.html";
+}
+
+</script>
+
+</body>
+</html>
