@@ -42,7 +42,7 @@ else
     wishlist.forEach(product => {
         const stars = getStars(product.rating);
         container.innerHTML += `
-            <div class="product">
+            <div class="product" onclick="viewProduct(${product.id})">
                 <img src="${product.image}">
                 <h3 style="margin-top:20px;">${product.name}</h3>
                 <div class="price-row" style="margin-top:12px;">
@@ -59,10 +59,10 @@ else
                         <span style="font-size:14px;">${product.rating}</span>
                         <span style="font-size:14px;">(${product.reviews} Reviews)</span>
                 </div>
-                <button class="move-btn" onclick="moveToCart(${product.id})">
+                <button class="move-btn" onclick="event.stopPropagation(); moveToCart(${product.id})">
                     Move to Cart
                 </button>
-                <button class="remove-btn" onclick="removeFromWishlist(${product.id})">
+                <button class="remove-btn" onclick="event.stopPropagation(); removeFromWishlist(${product.id})">
                     Remove from Wishlist
                 </button>
             </div>
@@ -81,6 +81,9 @@ function getStars(rating){
         stars += `<i class="fa-solid fa-star-half-stroke"></i>`;
     }
     return stars;
+}
+function viewProduct(id){
+    window.location.href = `product.html?id=${id}`;
 }
 
 function removeFromWishlist(id){
