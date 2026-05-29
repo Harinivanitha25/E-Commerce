@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signup - Nabi Store</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+
+.auth-page{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:40px 20px;
+}
+
+.auth-container{
+    width:100%;
+    max-width:500px;
+    background:white;
+    padding:40px;
+    border-radius:25px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.auth-container h1{
+    text-align:center;
+    margin-bottom:10px;
+    font-size:36px;
+}
+
+.auth-container p{
+    text-align:center;
+    color:#666;
+    margin-bottom:30px;
+}
+
+.auth-form{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.auth-form input{
+    width:100%;
+    padding:15px;
+    border:1px solid #ddd;
+    border-radius:14px;
+    outline:none;
+    font-size:15px;
+}
+
+.auth-form input:focus{
+    border-color:#111827;
+}
+
+.auth-btn{
+    background:#111827;
+    color:white;
+    border:none;
+    padding:15px;
+    border-radius:14px;
+    cursor:pointer;
+    font-size:16px;
+    font-weight:600;
+}
+
+.auth-btn:hover{
+    background:black;
+}
+
+.auth-bottom{
+    margin-top:20px;
+    text-align:center;
+    color:#666;
+}
+
+.auth-bottom a{
+    color:#111827;
+    font-weight:700;
+    text-decoration:none;
+}
+
+@media(max-width:768px){
+
+    .auth-container{
+        padding:30px 20px;
+    }
+
+    .auth-container h1{
+        font-size:30px;
+    }
+}
+
+</style>
+</head>
+<div id="auth-toast"></div>
+<body>
+
+<div class="auth-page">
+  <div class="auth-container">
+    <h1>Create Account</h1>
+    <p>Join Nabi Store today</p>
+
+    <form class="auth-form" onsubmit="signupUser(event)">
+    <input type="text" id="name" placeholder="Full Name" required>
+    <input type="email" id="email" placeholder="Email Address" required>
+    <input type="tel" id="phone" placeholder="Phone Number" required>
+    
+    <div class="password-box">
+    <input type="password"
+    id="password"
+    placeholder="Create Password"
+    required>
+
+    <i class="fa-solid fa-eye"
+    id="togglePassword"
+    onclick="togglePassword()"></i>
+    </div>
+
+    <div class="password-box">
+    <input type="password"
+    id="confirmPassword"
+    placeholder="Confirm Password"
+    required>
+
+    <i class="fa-solid fa-eye"
+    id="toggleConfirmPassword"
+    onclick="toggleConfirmPassword()"></i>
+    </div>
+    <button class="auth-btn">
+        Create Account
+    </button>
+
+</form>
+        <div class="auth-bottom">
+            Already have an account?
+            <a href="login.html">Login</a>
+        </div>
+    </div>
+</div>
+
+<script>
+
+function togglePassword(){
+
+    const password = document.getElementById("password");
+    const icon = document.getElementById("togglePassword");
+    if(password.type === "password"){
+        password.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+    }
+    else
+    {
+        password.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+    }
+}
+
+function toggleConfirmPassword(){
+
+    const confirmPassword = document.getElementById("confirmPassword");
+    const icon = document.getElementById("toggleConfirmPassword");
+    if(confirmPassword.type === "password"){
+        confirmPassword.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+    }
+    else
+    {
+        confirmPassword.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+    }
+}
+
+
+function showToast(message,type="success"){
+    const toast = document.getElementById("auth-toast");
+    toast.innerText = message;
+    toast.className = "";
+    toast.classList.add(type);
+    toast.classList.add("show");
+
+    setTimeout(()=>{
+        toast.classList.remove("show");
+    },2500);
+}
+
+function signupUser(event){
+
+    event.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+
+    const email = document.getElementById("email").value.trim();
+
+    const phone = document.getElementById("phone").value.trim();
+
+    const password = document.getElementById("password").value.trim();
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if(!emailPattern.test(email)){
+        showToast(
+            "Enter a valid email address",
+            "error"
+        );
+        return;
+    }
+
+    const phonePattern = /^[6-9]\d{9}$/;
+
+    if(!phonePattern.test(phone)){
+        showToast(
+            "Enter valid 10 digit phone number",
+            "error"
+        );
+        return;
+    }
+
+    if(password.length < 6){
+        showToast(
+            "Password must be at least 6 characters",
+            "error"
+        );
+        return;
+    }
+const confirmPassword =
+document.getElementById("confirmPassword").value.trim();
+
+if(password !== confirmPassword){
+    showToast(
+        "Passwords do not match",
+        "error"
+    );
+    return;
+}
+
+let users = JSON.parse(localStorage.getItem("nabiUsers")) || [];
+
+const emailExists = users.find(user => user.email === email);
+
+if(emailExists){
+    showToast(
+        "Email already registered",
+        "warning"
+    );
+    return;
+}
+
+const user = {
+    name,
+    email,
+    phone,
+    password
+};
+
+users.push(user);
+
+localStorage.setItem(
+    "nabiUsers",
+    JSON.stringify(users)
+);
+
+showToast(
+    "Account Created Successfully!"
+);
+
+setTimeout(()=>{ window.location.href = "login.html";},1500);
+}
+
+</script>
+</body>
+</html>

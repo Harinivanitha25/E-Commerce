@@ -31,12 +31,17 @@
 <div id="toast"></div>
 
 <script>
+const loggedEmail = localStorage.getItem("loggedUserEmail") || "guest";
+
+const CART_KEY = `cart_${loggedEmail}`;
+
+const WISHLIST_KEY = `wishlist_${loggedEmail}`;
 
 function goHome(){
     window.location.href = "index.html";
 }
 
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
 function displayCart(){
     const summary = document.getElementById("cart-summary");
     const container = document.getElementById("cart-container");
@@ -143,19 +148,14 @@ function removeItem(i){
 
 function saveCart(){
     localStorage.setItem(
-        "cart",
+        CART_KEY,
         JSON.stringify(cart)
     );
     displayCart();
 }
 
 function checkout(){
-    cart = [];
-    localStorage.setItem(
-        "cart",
-        JSON.stringify(cart)
-    );
-    window.location.href = "success.html";
+    window.location.href = "checkout.html";
 }
 
 function showToast(msg){

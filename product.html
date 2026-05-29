@@ -37,7 +37,9 @@ const params = new URLSearchParams(window.location.search);
 const id = parseInt(params.get("id"));
 const product = products.find(p => p.id === id);
 const details = document.getElementById("details");
-
+const loggedEmail = localStorage.getItem("loggedUserEmail") || "guest";
+const CART_KEY = `cart_${loggedEmail}`;
+const WISHLIST_KEY = `wishlist_${loggedEmail}`;
 function displayProduct(){
     if(!product){
         details.innerHTML = `
@@ -204,7 +206,7 @@ function getStars(rating){
 
 function toggleWishlist(id){
     let wishlist =
-    JSON.parse(localStorage.getItem("wishlist")) || [];
+    JSON.parse(localStorage.getItem(WISHLIST_KEY)) || [];
     const exists =
     wishlist.find(item => item.id === id);
     if(exists)
@@ -217,7 +219,7 @@ function toggleWishlist(id){
         showToast("Added to Wishlist");
     }
     localStorage.setItem(
-        "wishlist",
+        WISHLIST_KEY,
         JSON.stringify(wishlist)
     );
     updateWishlistCount();
@@ -225,7 +227,7 @@ function toggleWishlist(id){
 
 function addToCart(id){
     let cart =
-    JSON.parse(localStorage.getItem("cart")) || [];
+    JSON.parse(localStorage.getItem(CART_KEY)) || [];
     const existing =
     cart.find(item => item.id === id);
     if(existing)
@@ -240,7 +242,7 @@ function addToCart(id){
         });
     }
     localStorage.setItem(
-        "cart",
+        CART_KEY,
         JSON.stringify(cart)
     );
     updateCart();
@@ -258,15 +260,15 @@ function showToast(msg){
 }
 
 function getWishlist(){
-    return JSON.parse(localStorage.getItem("wishlist")) || [];
+    return JSON.parse(localStorage.getItem(WISHLIST_KEY)) || [];
 }
 
 function saveWishlist(w){
-    localStorage.setItem("wishlist",JSON.stringify(w));
+    localStorage.setItem(WISHLIST_KEY,JSON.stringify(w));
 }
 
 function updateCart(){
-    let latestCart=JSON.parse(localStorage.getItem("cart")) || [];
+    let latestCart=JSON.parse(localStorage.getItem(CART_KEY)) || [];
     const count=latestCart.reduce((total,item)=> total + item.quantity,0);
     document.getElementById("cart-count").innerText = count;
 }

@@ -86,6 +86,18 @@ body{
     font-size:14px;
     transition:0.3s;
 }
+.logout-btn{
+        border:none;
+    background:#111827;
+    color:white;
+    padding:12px 18px;
+    border-radius:30px;
+    cursor:pointer;
+    font-size:14px;
+    transition:0.3s;
+    margin-left: 12px;
+}
+
 
 .wishlist-btn:hover,
 .cart-btn:hover,
@@ -1368,3 +1380,87 @@ table td{
     }
 }
 
+#user-name{
+    display:flex;
+    align-items:center;
+    font-weight:560;
+    color:#111827;
+    font-size:18px;
+}
+
+
+#auth-toast{
+    position:fixed;
+    top:30px;
+    right:30px;
+    background:#111827;
+    color:white;
+    padding:16px 22px;
+    border-radius:14px;
+    font-size:15px;
+    font-weight:600;
+    box-shadow:0 10px 25px rgba(0,0,0,0.15);
+    z-index:9999;
+    opacity:0;
+    transform:translateY(-20px);
+    pointer-events:none;
+    transition:0.4s ease;
+}
+
+#auth-toast.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+
+#auth-toast.success{
+    background:#16a34a;
+}
+
+
+#auth-toast.error{
+    background:#dc2626;
+}
+
+
+#auth-toast.warning{
+    background:#f59e0b;
+    color:black;
+}
+
+@media(max-width:768px){
+
+    #auth-toast{
+        top:20px;
+        right:15px;
+        left:15px;
+        width:auto;
+        text-align:center;
+        font-size:14px;
+        padding:14px;
+    }
+}
+.password-box{
+    position:relative;
+    width:100%;
+}
+
+.password-box input{
+    width:100%;
+    padding:15px;
+    padding-right:50px;
+    border:1px solid #ddd;
+    border-radius:14px;
+    outline:none;
+    font-size:15px;
+}
+
+.password-box i{
+    position:absolute;
+    right:18px;
+    top:50%;
+    transform:translateY(-50%);
+    cursor:pointer;
+    color:#666;
+    font-size:18px;
+}

@@ -17,7 +17,11 @@
 </section>
 
 <script>
-const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+
+const loggedEmail = localStorage.getItem("loggedUserEmail") || "guest";
+const CART_KEY = `cart_${loggedEmail}`;
+const WISHLIST_KEY = `wishlist_${loggedEmail}`;
+const wishlist = JSON.parse(localStorage.getItem(WISHLIST_KEY)) || [];
 const container = document.getElementById("wishlist");
 if(wishlist.length === 0)
 {    container.innerHTML = `
@@ -87,21 +91,21 @@ function viewProduct(id){
 }
 
 function removeFromWishlist(id){
-    let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+    let wishlist = JSON.parse(localStorage.getItem(WISHLIST_KEY)) || [];
     wishlist = wishlist.filter(item => item.id !== id);
-    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    localStorage.setItem(WISHLIST_KEY, JSON.stringify(wishlist));
     location.reload();
 }
 
 function getCart(){
-    return JSON.parse(localStorage.getItem("cart")) || [];
+    return JSON.parse(localStorage.getItem(CART_KEY)) || [];
 }
 
 function saveCart(cart){
-    localStorage.setItem("cart", JSON.stringify(cart));
+    localStorage.setItem(CART_KEY, JSON.stringify(cart));
 }
 function moveToCart(id){
-    let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+    let wishlist = JSON.parse(localStorage.getItem(WISHLIST_KEY)) || [];
     let cart = getCart();
     const product = wishlist.find(item => item.id === id);
     const existing = cart.find(item => item.id === id);
@@ -114,7 +118,7 @@ function moveToCart(id){
         cart.push({...product, quantity: 1});
     }
     wishlist = wishlist.filter(item => item.id !== id);
-    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    localStorage.setItem(WISHLIST_KEY, JSON.stringify(wishlist));
     saveCart(cart);
     location.reload();
 }

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout - Nabi Store</title>
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+.checkout-page{
+    max-width:1200px;
+    margin:40px auto;
+    padding:20px;
+    display:grid;
+    grid-template-columns:1fr 400px;
+    gap:30px;
+}
+
+.checkout-left,
+.checkout-right{
+    background:white;
+    border-radius:25px;
+    padding:30px;
+    box-shadow:0 4px 20px rgba(0,0,0,0.05);
+}
+
+.checkout-title{
+    font-size:32px;
+    margin-bottom:25px;
+    font-weight:700;
+}
+
+.form-group{
+    margin-bottom:20px;
+}
+
+.form-group input,
+.form-group textarea{
+    width:100%;
+    padding:15px;
+    border:1px solid #ddd;
+    border-radius:14px;
+    outline:none;
+    font-size:15px;
+    margin-bottom:15px;
+    transition:0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus{
+    border-color:#111827;
+}
+
+.form-group textarea{
+    resize:none;
+    height:120px;
+}
+
+.payment-methods{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+    margin-top:20px;
+}
+
+.payment-option{
+    border:1px solid #ddd;
+    border-radius:14px;
+    padding:18px 20px;
+
+    display:flex;
+    align-items:center;
+
+    gap:15px;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+.payment-option:hover{
+    border-color:#111827;
+    background:#f9f9f9;
+}
+
+.payment-option input[type="radio"]{
+    width:18px;
+    height:18px;
+
+    margin:0;
+
+    accent-color:#111827;
+
+    cursor:pointer;
+
+    flex-shrink:0;
+}
+
+.payment-option span{
+    display:flex;
+    align-items:center;
+
+    font-size:17px;
+    font-weight:500;
+
+    color:#111827;
+
+    line-height:1.2;
+}
+
+.order-summary-item{
+    display:flex;
+    justify-content:space-between;
+    margin-top:15px;
+    color:#555;
+    font-size:15px;
+}
+
+.summary-total{
+    border-top:1px solid #ddd;
+    margin-top:20px;
+    padding-top:20px;
+    display:flex;
+    justify-content:space-between;
+    font-size:24px;
+    font-weight:700;
+}
+
+.place-order-btn{
+    width:100%;
+    margin-top:30px;
+    padding:16px;
+    border:none;
+    border-radius:14px;
+    background:#111827;
+    color:white;
+    font-size:17px;
+    cursor:pointer;
+    font-weight:700;
+    transition:0.3s;
+}
+
+.place-order-btn:hover{
+    background:black;
+    transform:translateY(-2px);
+}
+
+.secure-box{
+    margin-top:25px;
+    background:#f8f8f8;
+    padding:18px;
+    border-radius:14px;
+    text-align:center;
+    color:#555;
+    font-size:14px;
+}
+
+.checkout-product{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    padding:18px 0;
+    border-bottom:1px solid #eee;
+}
+
+.checkout-product-left{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    flex:1;
+}
+
+.checkout-product-img{
+    width:85px;
+    height:85px;
+    object-fit:cover;
+    border-radius:14px;
+    background:#f5f5f5;
+    border:1px solid #eee;
+    padding:5px;
+}
+
+.checkout-product h4{
+    font-size:16px;
+    margin-bottom:6px;
+    color:#111827;
+}
+
+.checkout-product p{
+    color:#666;
+    font-size:14px;
+    margin-bottom:6px;
+}
+
+.checkout-price{
+    font-size:18px;
+    font-weight:700;
+    color:#111827;
+    min-width:90px;
+    text-align:right;
+}
+
+.free-delivery{
+    color:green;
+    font-size:13px;
+    font-weight:600;
+}
+
+.paid-delivery{
+    color:#d11a2a;
+    font-size:13px;
+    font-weight:600;
+}
+
+
+@media(max-width:900px){
+
+    .checkout-page{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:768px){
+
+    .checkout-page{
+        padding:15px;
+    }
+
+    .checkout-left,
+    .checkout-right{
+        padding:20px;
+    }
+
+    .checkout-title{
+        font-size:26px;
+    }
+
+    .summary-total{
+        font-size:20px;
+    }
+
+    .checkout-product{
+        align-items:flex-start;
+    }
+
+    .checkout-product-img{
+        width:70px;
+        height:70px;
+    }
+
+    .checkout-price{
+        font-size:16px;
+    }
+}
+
+</style>
+</head>
+<div id="toast"></div>
+<body>
+
+<header class="top-header">
+    <div class="logo">
+        <span class="black">Nabi</span>
+        <span class="orange">Store</span>
+    </div>
+
+    <button class="cart-btn" onclick="goHome()">
+        Back To Shop
+    </button>
+</header>
+
+<div class="checkout-page">
+    <div class="checkout-left">
+        <h1 class="checkout-title">
+            Delivery Address
+        </h1>
+     <div class="form-group">
+        <input type="text" id="fullName" placeholder="Enter your full name">
+        <input type="tel" id="phone" placeholder="Enter phone number">
+        <textarea id="address" placeholder="House no, Street, Area"></textarea>
+        <input type="text" id="city" placeholder="Enter city">
+        <input type="text" id="pincode" placeholder="Enter pincode">
+    </div>
+
+        <div class="form-group">
+            <label>Payment Method</label>
+
+            <div class="payment-methods">
+                <label class="payment-option">
+                    <input type="radio" name="payment" checked>
+                    Cash on Delivery
+                </label>
+
+                <label class="payment-option">
+                    <input type="radio" name="payment">
+                    Google Pay (GPay)
+                </label>
+
+                <label class="payment-option">
+                    <input type="radio" name="payment">
+                    PhonePe
+                </label>
+
+                <label class="payment-option">
+                    <input type="radio" name="payment">
+                    Credit / Debit Card
+                </label>
+
+                <label class="payment-option">
+                    <input type="radio" name="payment">
+                    UPI Payment
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="checkout-right">
+        <h1 class="checkout-title">
+            Order Summary
+        </h1>
+        <div id="summary-items"></div>
+        <div class="order-summary-item">
+            <span>Total Delivery</span>
+            <span id="delivery-total">₹0</span>
+        </div>
+        <div class="order-summary-item">
+            <span>Platform Fee</span>
+            <span>₹9</span>
+        </div>
+        <div class="summary-total">
+            <span>Total</span>
+            <span id="final-total">₹0</span>
+        </div>
+        <button class="place-order-btn"
+        onclick="placeOrder()">
+            Place Order
+        </button>
+        <div class="secure-box">
+            🔒 100% Secure Payments & Safe Checkout
+        </div>
+    </div>
+</div>
+
+<script>
+
+const loggedEmail = localStorage.getItem("loggedUserEmail") || "guest";
+
+const CART_KEY = `cart_${loggedEmail}`;
+
+const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+
+const savedUser = JSON.parse(localStorage.getItem("nabiUser"));
+
+if(savedUser){
+
+    document.getElementById("fullName").value =
+    savedUser.name || "";
+    document.getElementById("phone").value =
+    savedUser.phone || "";
+}
+
+const summaryContainer = document.getElementById("summary-items");
+
+let subtotal = 0;
+let deliveryTotal = 0;
+
+cart.forEach(item => {
+
+    subtotal += item.price * item.quantity;
+
+    let deliveryCharge = 0;
+
+    if(item.delivery && !item.delivery.freeDelivery){
+        deliveryCharge =
+        Math.floor(Math.random() * 51) + 30;
+
+        deliveryTotal += deliveryCharge;
+    }
+    summaryContainer.innerHTML += `
+    <div class="checkout-product">
+        <div class="checkout-product-left">
+            <img src="${item.image}" class="checkout-product-img">
+            <div>
+                <h4>${item.name}</h4>
+                <p>Qty: ${item.quantity}</p>
+                ${
+                    item.delivery && item.delivery.freeDelivery
+                    ?
+                    `<span class="free-delivery">
+                        Free Delivery
+                    </span>`
+                    :
+                    `<span class="paid-delivery">
+                        Delivery Charge: ₹${deliveryCharge}
+                    </span>`
+                }
+            </div>
+        </div>
+        <div class="checkout-price">
+            ₹${item.price * item.quantity}
+        </div>
+    </div>
+    `;
+});
+
+const platformFee = 9;
+
+const finalTotal =
+subtotal +
+platformFee +
+deliveryTotal;
+
+document.getElementById("delivery-total").innerText = deliveryTotal === 0 ? "FREE" : `₹${deliveryTotal}`;
+
+document.getElementById("final-total").innerText = `₹${finalTotal}`;
+
+function goHome(){
+    window.location.href = "index.html";
+}
+
+function showToast(message){
+    const toast = document.getElementById("toast");
+    toast.innerText = message;
+    toast.classList.add("show");
+    setTimeout(()=>{
+        toast.classList.remove("show");
+    },2500);
+}
+
+function placeOrder(){
+    const address = document.getElementById("address").value.trim();
+
+    const city = document.getElementById("city").value.trim();
+
+    const pincode = document.getElementById("pincode").value.trim();
+    if(address === ""){
+        showToast("Please enter address");
+        return;
+    }
+
+    if(city === ""){
+        showToast("Please enter city");
+        return;
+    }
+
+    if(pincode === ""){
+        showToast("Please enter pincode");
+        return;
+    }
+
+    if(!/^\d{6}$/.test(pincode)){
+        showToast("Enter valid 6 digit pincode");
+        return;
+    }
+
+    if(cart.length === 0){
+        showToast("Your cart is empty");
+        return;
+    }
+    showToast("Order placed successfully");
+    setTimeout(()=>{
+
+        localStorage.removeItem(CART_KEY);
+
+        window.location.href =
+        "success.html";
+
+    },1000);
+}
+</script>
+
+</body>
+</html>
