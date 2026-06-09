@@ -1,270 +1,214 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login - Nabi Store</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Nabi Store</title>
 
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<style>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <style>
+      .auth-page {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+      }
 
-.auth-page{
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:40px 20px;
-}
+      .auth-container {
+        width: 100%;
+        max-width: 450px;
+        background: white;
+        padding: 40px;
+        border-radius: 25px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      }
 
-.auth-container{
-    width:100%;
-    max-width:450px;
-    background:white;
-    padding:40px;
-    border-radius:25px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.08);
-}
+      .auth-container h1 {
+        text-align: center;
+        margin-bottom: 10px;
+        font-size: 36px;
+      }
 
-.auth-container h1{
-    text-align:center;
-    margin-bottom:10px;
-    font-size:36px;
-}
+      .auth-container p {
+        text-align: center;
+        color: #666;
+        margin-bottom: 30px;
+      }
 
-.auth-container p{
-    text-align:center;
-    color:#666;
-    margin-bottom:30px;
-}
+      .auth-form {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
 
-.auth-form{
-    display:flex;
-    flex-direction:column;
-    gap:18px;
-}
+      .auth-form input {
+        width: 100%;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 14px;
+        outline: none;
+        font-size: 15px;
+      }
 
-.auth-form input{
-    width:100%;
-    padding:15px;
-    border:1px solid #ddd;
-    border-radius:14px;
-    outline:none;
-    font-size:15px;
-}
+      .auth-form input:focus {
+        border-color: #111827;
+      }
 
-.auth-form input:focus{
-    border-color:#111827;
-}
+      .auth-btn {
+        background: #111827;
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 14px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+      }
 
-.auth-btn{
-    background:#111827;
-    color:white;
-    border:none;
-    padding:15px;
-    border-radius:14px;
-    cursor:pointer;
-    font-size:16px;
-    font-weight:600;
-}
+      .auth-btn:hover {
+        background: black;
+      }
 
-.auth-btn:hover{
-    background:black;
-}
+      .auth-bottom {
+        margin-top: 20px;
+        text-align: center;
+        color: #666;
+      }
 
-.auth-bottom{
-    margin-top:20px;
-    text-align:center;
-    color:#666;
-}
+      .auth-bottom a {
+        color: #111827;
+        font-weight: 700;
+        text-decoration: none;
+      }
 
-.auth-bottom a{
-    color:#111827;
-    font-weight:700;
-    text-decoration:none;
-}
+      @media (max-width: 768px) {
+        .auth-container {
+          padding: 30px 20px;
+        }
 
-@media(max-width:768px){
+        .auth-container h1 {
+          font-size: 30px;
+        }
+      }
+    </style>
+  </head>
 
-    .auth-container{
-        padding:30px 20px;
-    }
-
-    .auth-container h1{
-        font-size:30px;
-    }
-}
-
-</style>
-</head>
-
-<body>
-
-<div class="auth-page">
-
-    <div class="auth-container">
-
+  <body>
+    <div class="auth-page">
+      <div class="auth-container">
         <h1>Welcome Back</h1>
 
         <p>Login to continue shopping</p>
 
-  <form class="auth-form" onsubmit="loginUser(event)">
+        <form class="auth-form" onsubmit="loginUser(event)">
+          <input
+            type="email"
+            id="loginEmail"
+            placeholder="Enter Email"
+            required
+          />
 
-    <input type="email" id="loginEmail"
-    placeholder="Enter Email" required>
+          <div class="password-box">
+            <input
+              type="password"
+              id="loginPassword"
+              placeholder="Enter Password"
+              required
+            />
 
-    <div class="password-box">
+            <i
+              class="fa-solid fa-eye"
+              id="toggleLoginPassword"
+              onclick="toggleLoginPassword()"
+            ></i>
+          </div>
 
-    <input type="password"
-    id="loginPassword"
-    placeholder="Enter Password"
-    required>
-
-    <i class="fa-solid fa-eye"
-    id="toggleLoginPassword"
-    onclick="toggleLoginPassword()"></i>
-
-</div>
-
-    <button class="auth-btn">
-        Login
-    </button>
-
-</form>
+          <button class="auth-btn">Login</button>
+        </form>
 
         <div class="auth-bottom">
-            Don't have an account?
-            <a href="signup.html">Signup</a>
+          Don't have an account?
+          <a href="signup.html">Signup</a>
         </div>
-
+      </div>
     </div>
+    <div id="auth-toast"></div>
+    <script>
+      function toggleLoginPassword() {
+        const password = document.getElementById("loginPassword");
 
-</div>
-<div id="auth-toast"></div>
-<script>
+        const icon = document.getElementById("toggleLoginPassword");
 
-function toggleLoginPassword(){
+        if (password.type === "password") {
+          password.type = "text";
 
-    const password =
-    document.getElementById("loginPassword");
+          icon.classList.remove("fa-eye");
 
-    const icon =
-    document.getElementById("toggleLoginPassword");
+          icon.classList.add("fa-eye-slash");
+        } else {
+          password.type = "password";
 
-    if(password.type === "password"){
+          icon.classList.remove("fa-eye-slash");
 
-        password.type = "text";
+          icon.classList.add("fa-eye");
+        }
+      }
 
-        icon.classList.remove("fa-eye");
+      function showToast(message, type = "success") {
+        const toast = document.getElementById("auth-toast");
 
-        icon.classList.add("fa-eye-slash");
-    }
+        toast.innerText = message;
 
-    else{
+        toast.className = "";
+        toast.classList.add(type);
+        toast.classList.add("show");
 
-        password.type = "password";
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, 2500);
+      }
 
-        icon.classList.remove("fa-eye-slash");
+      function loginUser(event) {
+        event.preventDefault();
 
-        icon.classList.add("fa-eye");
-    }
-}
+        const email = document.getElementById("loginEmail").value.trim();
 
-function showToast(message,type="success"){
+        const password = document.getElementById("loginPassword").value.trim();
 
-    const toast = document.getElementById("auth-toast");
+        const users = JSON.parse(localStorage.getItem("nabiUsers")) || [];
 
-    toast.innerText = message;
+        const savedUser = users.find((user) => user.email === email);
 
-    toast.className = "";
-    toast.classList.add(type);
-    toast.classList.add("show");
+        if (!savedUser) {
+          showToast("Email not registered", "error");
 
-    setTimeout(()=>{
-        toast.classList.remove("show");
-    },2500);
-}
+          return;
+        }
 
+        if (password === savedUser.password) {
+          localStorage.setItem("loggedIn", "true");
 
-function loginUser(event){
+          localStorage.setItem("loggedUserName", savedUser.name);
+          localStorage.setItem("loggedUserEmail", savedUser.email);
 
-    event.preventDefault();
-    
+          showToast("Login Successful!");
 
-    const email =
-    document.getElementById("loginEmail").value.trim();
-
-    const password =
-    document.getElementById("loginPassword").value.trim();
-
-    const users =
-JSON.parse(localStorage.getItem("nabiUsers")) || [];
-    
-const savedUser =
-users.find(user => user.email === email);
-
-if(!savedUser){
-
-    showToast(
-        "Email not registered",
-        "error"
-    );
-
-    return;
-}
-
-if(password === savedUser.password)
-{
-
-    localStorage.setItem(
-        "loggedIn",
-        "true"
-    );
-
-    localStorage.setItem(
-        "loggedUserName",
-        savedUser.name
-    );
-    localStorage.setItem(
-    "loggedUserEmail",
-    savedUser.email
-);
-
-    showToast(
-        "Login Successful!"
-    );
-
-    setTimeout(()=>{
-
-        window.location.href =
-        "index.html";
-
-    },1500);
-
-}
-
-else{
-
-    if(email !== savedUser.email){
-
-        showToast(
-            "Email not registered",
-            "error"
-        );
-
-    }
-
-    else if(password !== savedUser.password){
-
-        showToast(
-            "Wrong password",
-            "error"
-        );
-    }
-}
-}
-
-</script>
-</body>
+          setTimeout(() => {
+            window.location.href = "index.html";
+          }, 1500);
+        } else {
+          if (email !== savedUser.email) {
+            showToast("Email not registered", "error");
+          } else if (password !== savedUser.password) {
+            showToast("Wrong password", "error");
+          }
+        }
+      }
+    </script>
+  </body>
 </html>

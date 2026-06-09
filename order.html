@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My Orders</title>
+
+    <link rel="stylesheet" href="style.css" />
+
+    <style>
+      .orders-page {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 20px;
+      }
+
+      .order-card {
+        background: white;
+        border-radius: 20px;
+        padding: 25px;
+        margin-bottom: 25px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+      }
+
+      .order-header {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      .order-id {
+        font-weight: 700;
+      }
+
+      .order-date {
+        color: #777;
+      }
+
+      .order-status {
+        color: green;
+        font-weight: 700;
+      }
+
+      .order-products {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-top: 15px;
+      }
+
+      .order-item {
+        width: 260px;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        gap: 10px;
+
+        padding: 15px;
+
+        border: 1px solid #eee;
+        border-radius: 16px;
+
+        background: #fafafa;
+
+        transition: 0.25s;
+      }
+
+      .order-item:hover {
+        transform: translateY(-4px);
+
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      }
+
+      .order-item img {
+        width: 130px;
+        height: 130px;
+
+        object-fit: cover;
+
+        border-radius: 14px;
+      }
+
+      .order-item h4 {
+        margin: 0;
+
+        font-size: 16px;
+
+        text-align: center;
+      }
+
+      .order-item p {
+        margin: 3px;
+
+        color: #555;
+      }
+
+      .item-buy-btn {
+        margin-top: 5px;
+
+        border: none;
+
+        background: #111827;
+
+        color: white;
+
+        padding: 8px 18px;
+
+        border-radius: 10px;
+
+        cursor: pointer;
+      }
+
+      .order-total {
+        margin-top: 15px;
+        font-size: 22px;
+        font-weight: 700;
+      }
+
+      .order-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 20px;
+      }
+
+      .order-buttons button {
+        border: none;
+        padding: 10px 18px;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+
+      .buy-btn {
+        background: #111827;
+        color: white;
+      }
+
+      .cancel-btn {
+        background: #dc2626;
+        color: white;
+      }
+
+      .details-btn {
+        background: #f3f4f6;
+      }
+
+      .empty-orders {
+        text-align: center;
+        padding: 80px 20px;
+      }
+
+      .empty-orders img {
+        width: 250px;
+      }
+      .product-img-click {
+        cursor: pointer;
+        transition: 0.2s;
+      }
+
+      .product-img-click:hover {
+        transform: scale(1.05);
+      }
+
+      .item-buy-btn {
+        margin-top: 8px;
+        border: none;
+        background: #111827;
+        color: white;
+        padding: 6px 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 13px;
+      }
+
+      .item-buy-btn:hover {
+        background: black;
+      }
+
+      .cancel-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+      }
+
+      .cancel-box {
+        width: 500px;
+        background: white;
+        padding: 25px;
+        border-radius: 20px;
+      }
+
+      .cancel-box h3 {
+        margin-bottom: 30px;
+      }
+
+      .cancel-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin: 15px 0;
+      }
+
+      .cancel-item img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+
+      .cancel-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+      }
+
+      .cancel-actions button {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+      }
+
+      .cancel-all {
+        background: #dc2626;
+        color: white;
+      }
+
+      .cancel-selected {
+        background: #111827;
+        color: white;
+      }
+
+      .close-cancel {
+        background: #eee;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="top-header">
+      <h2>My Orders</h2>
+
+      <button class="cart-btn" onclick="window.location.href = 'index.html'">
+        Back
+      </button>
+    </header>
+
+    <div class="orders-page">
+      <div id="orders-container"></div>
+    </div>
+    <div class="cancel-modal" id="cancelModal">
+      <div class="cancel-box">
+        <h3>Cancel Order</h3>
+
+        <div id="cancel-products"></div>
+
+        <div class="cancel-actions">
+          <button class="cancel-all" onclick="cancelAllItems()">
+            Cancel All
+          </button>
+
+          <button class="cancel-selected" onclick="cancelSelectedItems()">
+            Cancel Selected
+          </button>
+
+          <button class="close-cancel" onclick="closeCancel()">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const loggedEmail = localStorage.getItem("loggedUserEmail") || "guest";
+
+      const ORDER_KEY = `orders_${loggedEmail}`;
+
+      const CART_KEY = `cart_${loggedEmail}`;
+
+      const orders = JSON.parse(localStorage.getItem(ORDER_KEY)) || [];
+
+      const container = document.getElementById("orders-container");
+
+      if (orders.length === 0) {
+        container.innerHTML = `
+
+    <div class="empty-orders">
+
+        <img src="images/cartempty.png">
+
+        <h2>No Orders Yet</h2>
+
+        <p>
+            Start shopping and your orders
+            will appear here.
+        </p>
+
+    </div>
+    `;
+      } else {
+        orders.forEach((order) => {
+          let productHTML = "";
+
+          order.products.forEach((item) => {
+            productHTML += `
+
+    <div class="order-item">
+    <img 
+    src="${item.image}"
+    class="product-img-click"
+    onclick="goProduct(${item.id})">
+
+    <div>
+        <h4>${item.name}</h4>
+        <p>
+            Qty : ${item.quantity}
+        </p>
+        <p>
+            ₹${item.price}
+        </p>
+        <button
+        class="item-buy-btn"
+        onclick="buySingle(${item.id})">
+
+            Buy Again
+
+        </button>
+    </div> </div>`;});
+
+        container.innerHTML += `
+
+        <div class="order-card">
+            <div class="order-header">
+                <div>
+
+                    <div class="order-id">
+                        Order ID:
+                        ${order.orderId}
+                    </div>
+
+                    <div class="order-date">
+                        ${order.date}
+                    </div>
+
+                </div>
+                <div class="order-status">
+                    ${order.status}
+                </div>
+
+            </div>
+               <div class="order-products">     ${productHTML}    </div>
+
+            <div class="order-total">
+                Total:
+                ₹${order.total}
+            </div>
+
+            <div class="order-buttons">
+                <button
+                class="buy-btn"
+                onclick="buyAgain('${order.orderId}')">
+                    Buy Again
+                </button>
+                ${
+                  order.status === "Cancelled"
+                    ? `
+                <button
+                class="cancel-btn"
+                onclick="removeOrder('${order.orderId}')">
+
+                Remove Order
+
+                </button>
+                `
+                                    : `
+                <button
+                class="details-btn"
+                onclick="viewDetails('${order.orderId}')">
+
+                View Details
+
+                </button>
+
+
+                <button
+                class="cancel-btn"
+                onclick="openCancel('${order.orderId}')">
+
+                Cancel Order
+
+                </button>
+                `
+                }
+
+            </div>
+
+        </div>
+        `;
+        });
+      }
+
+      function buyAgain(orderId) {
+        const order = orders.find((o) => o.orderId === orderId);
+
+        let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+
+        order.products.forEach((item) => {
+          const existing = cart.find((c) => c.id === item.id);
+
+          if (existing) {
+            existing.quantity += item.quantity;
+          } else {
+            cart.push(item);
+          }
+        });
+
+        localStorage.setItem(CART_KEY, JSON.stringify(cart));
+
+        window.location.href = "cart.html";
+      }
+
+      function cancelOrder(orderId) {
+        let allOrders = JSON.parse(localStorage.getItem(ORDER_KEY)) || [];
+
+        const order = allOrders.find((o) => o.orderId === orderId);
+
+        order.status = "Cancelled";
+
+        localStorage.setItem(ORDER_KEY, JSON.stringify(allOrders));
+
+        location.reload();
+      }
+
+      function viewDetails(orderId) {
+        window.location.href = `order-details.html?id=${orderId}`;
+      }
+      function goProduct(id) {
+        window.location.href = "product.html?id=" + id;
+      }
+
+      function buySingle(id) {
+        const orderItem = orders
+          .flatMap((o) => o.products)
+          .find((item) => item.id === id);
+
+        if (!orderItem) {
+          return;
+        }
+
+        let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+
+        const existing = cart.find((c) => c.id === id);
+
+        if (existing) {
+          existing.quantity++;
+        } else {
+          cart.push({
+            ...orderItem,
+
+            quantity: 1,
+          });
+        }
+
+        localStorage.setItem(CART_KEY, JSON.stringify(cart));
+
+        window.location.href = "cart.html";
+      }
+      function removeOrder(orderId) {
+        let allOrders = JSON.parse(localStorage.getItem(ORDER_KEY)) || [];
+
+        allOrders = allOrders.filter((order) => order.orderId !== orderId);
+
+        localStorage.setItem(ORDER_KEY, JSON.stringify(allOrders));
+
+        location.reload();
+      }
+
+      let cancelOrderId = null;
+
+      function openCancel(orderId) {
+        cancelOrderId = orderId;
+
+        const order = orders.find((o) => o.orderId === orderId);
+
+        let html = "";
+
+        order.products.forEach((item) => {
+          html += ` <div class="cancel-item">
+            <input 
+            type="checkbox"
+            class="cancel-check"
+            value="${item.id}">
+
+            <img src="${item.image}">
+            <span>
+            ${item.name}
+            </span>
+            </div>
+
+            `;
+        });
+
+        document.getElementById("cancel-products").innerHTML = html;
+
+        document.getElementById("cancelModal").style.display = "flex";
+      }
+
+      function closeCancel() {
+        document.getElementById("cancelModal").style.display = "none";
+      }
+      function cancelAllItems() {
+        let allOrders = JSON.parse(localStorage.getItem(ORDER_KEY)) || [];
+
+        let order = allOrders.find((o) => o.orderId === cancelOrderId);
+
+        order.status = "Cancelled";
+
+        localStorage.setItem(ORDER_KEY, JSON.stringify(allOrders));
+
+        location.reload();
+      }
+      function cancelSelectedItems() {
+        let selected = [
+          ...document.querySelectorAll(".cancel-check:checked"),
+        ].map((x) => x.value);
+
+        if (selected.length === 0) {
+          alert("Select products");
+
+          return;
+        }
+
+        let allOrders = JSON.parse(localStorage.getItem(ORDER_KEY)) || [];
+
+        let order = allOrders.find((o) => o.orderId === cancelOrderId);
+
+        order.products = order.products.filter(
+          (item) => !selected.includes(String(item.id)),
+        );
+
+        if (order.products.length === 0) {
+          order.status = "Cancelled";
+        }
+
+        order.total = order.products.reduce(
+          (sum, item) => sum + item.price * item.quantity,
+          0,
+        );
+
+        localStorage.setItem(ORDER_KEY, JSON.stringify(allOrders));
+
+        location.reload();
+      }
+    </script>
+  </body>
+</html>

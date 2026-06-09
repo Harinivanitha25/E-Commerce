@@ -1,57 +1,53 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Your Cart</title>
-<link rel="stylesheet" href="style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-</head>
-<body>
-<header class="top-header">
-    <h2> Your Cart</h2>
-    <button class="cart-btn" onclick="goHome()">Back</button>
-</header>
-<section class="products-main">
-    <div id="cart-container"></div>
-</section>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header class="top-header">
+      <h2>Your Cart</h2>
+      <button class="cart-btn" onclick="goHome()">Back</button>
+    </header>
+    <section class="products-main">
+      <div id="cart-container"></div>
+    </section>
 
-<div id="cart-summary">
+    <div id="cart-summary">
+      <h2 class="total-text">Total: ₹<span id="total">0</span></h2>
 
-    <h2 class="total-text">
-        Total: ₹<span id="total">0</span>
-    </h2>
-
-    <div class="checkout-wrapper">
-        <button class="checkout-btn" onclick="checkout()">
-            Checkout
-        </button>
+      <div class="checkout-wrapper">
+        <button class="checkout-btn" onclick="checkout()">Checkout</button>
+      </div>
     </div>
+    <div id="toast"></div>
 
-</div>
-<div id="toast"></div>
+    <script>
+      const loggedEmail = localStorage.getItem("loggedUserEmail") || "guest";
 
-<script>
-const loggedEmail = localStorage.getItem("loggedUserEmail") || "guest";
+      const CART_KEY = `cart_${loggedEmail}`;
 
-const CART_KEY = `cart_${loggedEmail}`;
+      const WISHLIST_KEY = `wishlist_${loggedEmail}`;
 
-const WISHLIST_KEY = `wishlist_${loggedEmail}`;
+      function goHome() {
+        window.location.href = "index.html";
+      }
 
-function goHome(){
-    window.location.href = "index.html";
-}
-
-let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
-function displayCart(){
-    const summary = document.getElementById("cart-summary");
-    const container = document.getElementById("cart-container");
-    const totalEl = document.getElementById("total");
-    container.innerHTML = "";
-    let sum = 0;
-    if(cart.length === 0)
-    {
-    summary.style.display = "none";
-    container.innerHTML = `
+      let cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+      function displayCart() {
+        const summary = document.getElementById("cart-summary");
+        const container = document.getElementById("cart-container");
+        const totalEl = document.getElementById("total");
+        container.innerHTML = "";
+        let sum = 0;
+        if (cart.length === 0) {
+          summary.style.display = "none";
+          container.innerHTML = `
     <div class="empty-cart">
         <img 
         src="images/cartempty.png"
@@ -65,14 +61,14 @@ function displayCart(){
         </button>
     </div>
     `;
-    totalEl.innerText = 0;
-    return;
-}
+          totalEl.innerText = 0;
+          return;
+        }
 
-summary.style.display = "block";
-    cart.forEach((item,index)=>{
-        const stars = getStars(item.rating);
-        container.innerHTML += `
+        summary.style.display = "block";
+        cart.forEach((item, index) => {
+          const stars = getStars(item.rating);
+          container.innerHTML += `
         <div class="product"
              onclick="viewProduct(${item.id})">
             <img src="${item.image}">
@@ -101,72 +97,64 @@ summary.style.display = "block";
             </button>
         </div>
         `;
-        sum += item.price * item.quantity;
-    });
-    totalEl.innerText = sum;
-}
+          sum += item.price * item.quantity;
+        });
+        totalEl.innerText = sum;
+      }
 
-function getStars(rating){
-    const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
-    let stars = "";
-    for(let i = 0; i < fullStars; i++){
-        stars += `<i class="fa-solid fa-star"></i>`;
-    }
-    if(hasHalfStar)
-    {
-        stars += `<i class="fa-solid fa-star-half-stroke"></i>`;
-    }
-    return stars;
-}
+      function getStars(rating) {
+        const fullStars = Math.floor(rating);
+        const hasHalfStar = rating % 1 !== 0;
+        let stars = "";
+        for (let i = 0; i < fullStars; i++) {
+          stars += `<i class="fa-solid fa-star"></i>`;
+        }
+        if (hasHalfStar) {
+          stars += `<i class="fa-solid fa-star-half-stroke"></i>`;
+        }
+        return stars;
+      }
 
-function viewProduct(id){
-    window.location.href = `product.html?id=${id}`;
-}
+      function viewProduct(id) {
+        window.location.href = `product.html?id=${id}`;
+      }
 
-function increaseQty(i){
-    cart[i].quantity++;
-    saveCart();
-}
+      function increaseQty(i) {
+        cart[i].quantity++;
+        saveCart();
+      }
 
-function decreaseQty(i){
-    if(cart[i].quantity > 1)
-    {
-        cart[i].quantity--;
-    } 
-    else 
-    {
-        cart.splice(i,1);
-    }
-    saveCart();
-}
+      function decreaseQty(i) {
+        if (cart[i].quantity > 1) {
+          cart[i].quantity--;
+        } else {
+          cart.splice(i, 1);
+        }
+        saveCart();
+      }
 
-function removeItem(i){
-    cart.splice(i,1);
-    saveCart();
-}
+      function removeItem(i) {
+        cart.splice(i, 1);
+        saveCart();
+      }
 
-function saveCart(){
-    localStorage.setItem(
-        CART_KEY,
-        JSON.stringify(cart)
-    );
-    displayCart();
-}
+      function saveCart() {
+        localStorage.setItem(CART_KEY, JSON.stringify(cart));
+        displayCart();
+      }
 
-function checkout(){
-    window.location.href = "checkout.html";
-}
+      function checkout() {
+        window.location.href = "checkout.html";
+      }
 
-function showToast(msg){
-    const t = document.getElementById("toast");
-    t.innerText = msg;
-    t.className = "show";
-    setTimeout(()=>t.className="",2000);
-}
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.innerText = msg;
+        t.className = "show";
+        setTimeout(() => (t.className = ""), 2000);
+      }
 
-displayCart();
-
-</script>
-</body>
+      displayCart();
+    </script>
+  </body>
 </html>

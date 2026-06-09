@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Details</title>
+    <link rel="stylesheet" href="style.css" />
+
+    <style>
+      .order-details-page {
+        max-width: 1250px;
+        margin: 10px auto;
+      }
+
+      .details-card {
+        background: white;
+        padding: 28px;
+        border-radius: 24px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        display: grid;
+        grid-template-columns: 1fr 1fr 280px;
+        gap: 25px;
+        align-items: start;
+      }
+
+      .details-card h2 {
+        margin-bottom: 20px;
+      }
+
+      .order-info p {
+        margin: 10px 0;
+        color: #000000;
+        line-height: 1.4;
+      }
+
+      .products-list h3 {
+        margin-bottom: 15px;
+      }
+
+      .product-row {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 0;
+        border-bottom: 1px solid #eee;
+      }
+
+      .product-row img {
+        width: 75px;
+        height: 75px;
+        object-fit: cover;
+        border-radius: 14px;
+        cursor: pointer;
+        transition: 0.25s;
+      }
+
+      .product-row img:hover {
+        transform: scale(1.08);
+      }
+
+      .product-row h4 {
+        margin: 0 0 6px;
+        color: #111827;
+      }
+
+      .product-row p {
+        margin: 3px 0;
+        color: #555;
+      }
+
+      .timeline {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 10px;
+      }
+
+      .step {
+        background: #e5e7eb;
+        color: #6b7280;
+        padding: 16px;
+        border-radius: 16px;
+        font-weight: 600;
+        position: relative;
+        transition: 0.3s;
+      }
+
+      .step.completed {
+        background: #d1fae5;
+        color: #047857;
+      }
+
+      .step.current {
+        background: #10b981;
+        color: white;
+        transform: scale(1.05);
+        box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+      }
+
+      .step.pending {
+        background: #f3f4f6;
+        color: #9ca3af;
+      }
+
+      .step small {
+        display: block;
+        margin-top: 5px;
+        font-size: 12px;
+        font-weight: 500;
+      }
+
+      .total-box {
+        grid-column: 1 / 4;
+        margin-top: 10px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      .review-btn {
+        margin-top: 20px;
+        border: none;
+        padding: 14px 25px;
+        border-radius: 12px;
+        background: #111827;
+        color: white;
+        cursor: pointer;
+      }
+
+      .review-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .review-box {
+        background: white;
+        width: 350px;
+        padding: 25px;
+        border-radius: 20px;
+      }
+
+      .review-box select,
+      .review-box textarea {
+        width: 100%;
+        margin-top: 10px;
+        padding: 10px;
+      }
+
+      .review-box textarea {
+        height: 120px;
+        resize: none;
+      }
+
+      .review-box button {
+        width: 100%;
+        margin-top: 15px;
+        padding: 12px;
+        border: none;
+        border-radius: 10px;
+        background: #111827;
+        color: white;
+      }
+
+      @media (max-width: 900px) {
+        .details-card {
+          grid-template-columns: 1fr;
+        }
+
+        .timeline {
+          margin-top: 20px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .product-row {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .product-row img {
+          width: 90px;
+          height: 90px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="top-header">
+      <h2>Order Details</h2>
+
+      <button class="cart-btn" onclick="history.back()">Back</button>
+    </header>
+
+    <div class="order-details-page">
+      <div id="order-details"></div>
+    </div>
+
+    <div class="review-modal" id="reviewModal">
+      <div class="review-box">
+        <h3>Rate Your Order</h3>
+
+        <select id="rating">
+          <option value="5">⭐⭐⭐⭐⭐</option>
+          <option value="4">⭐⭐⭐⭐</option>
+          <option value="3">⭐⭐⭐</option>
+          <option value="2">⭐⭐</option>
+          <option value="1">⭐</option>
+        </select>
+
+        <textarea id="reviewText" placeholder="Write your review"> </textarea>
+
+        <button onclick="submitReview()">Submit Review</button>
+      </div>
+    </div>
+
+    <script>
+      const loggedEmail = localStorage.getItem("loggedUserEmail") || "guest";
+
+      const ORDER_KEY = `orders_${loggedEmail}`;
+
+      const params = new URLSearchParams(window.location.search);
+
+      const orderId = params.get("id");
+
+      const orders = JSON.parse(localStorage.getItem(ORDER_KEY)) || [];
+
+      const order = orders.find((o) => o.orderId === orderId);
+
+      const details = document.getElementById("order-details");
+
+      if (!order) {
+        details.innerHTML = "<h2>Order Not Found</h2>";
+      } else {
+        let productsHTML = "";
+
+        order.products.forEach((item) => {
+          productsHTML += `
+
+        <div class="product-row">
+
+            <img 
+            src="${item.image}"
+            onclick="goProduct(${item.id})">
+
+            <div>
+                <h4>${item.name}</h4>
+                <p>Qty: ${item.quantity}</p>
+                <p>₹${item.price}</p>
+            </div>
+        </div>
+        `;
+        });
+
+        const steps = [
+          {
+            name: "Ordered",
+            days: 0,
+          },
+          {
+            name: "Packed",
+            days: 1,
+          },
+          {
+            name: "Shipped",
+            days: 3,
+          },
+          {
+            name: "Out For Delivery",
+            days: 5,
+          },
+          {
+            name: "Delivered",
+            days: 7,
+          },
+        ];
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        let currentIndex = 0;
+        steps.forEach((step, index) => {
+          let stepDate = new Date(order.date);
+          stepDate.setDate(stepDate.getDate() + step.days);
+          stepDate.setHours(0, 0, 0, 0);
+          if (stepDate <= today) {
+            currentIndex = index;
+          }
+        });
+
+        let timelineHTML = "";
+        steps.forEach((step, index) => {
+          let date = new Date(order.date);
+          date.setDate(date.getDate() + step.days);
+          let formatted = date.toLocaleDateString();
+          timelineHTML += `
+
+            <div class="
+            step
+            ${
+            index < currentIndex
+                ? "completed"
+                : index === currentIndex
+                ? "current"
+                : "pending"
+            }
+            ">
+            ${step.name}
+
+            <small>
+            ${formatted}
+            </small>
+
+            </div>
+            `;
+        });
+
+        details.innerHTML = `
+
+       <div class="details-card">
+        <div class="order-info">
+        <h2>
+            Order #${order.orderId}
+        </h2>
+        <br>
+            <p>
+                <strong>Date:</strong>
+                ${order.date}
+            </p>
+
+            <p>
+                <strong>Status:</strong>
+                ${order.status}
+            </p>
+
+            <p>
+                <strong>Customer:</strong>
+                ${order.customer}
+            </p>
+
+            <p>
+                <strong>Address:</strong>
+                ${order.address},
+                ${order.city},
+                ${order.pincode}
+            </p>
+
+            <p>
+                <strong>Payment:</strong>
+                ${order.payment}
+            </p>
+
+        </div>
+
+        <div class="products-list">
+
+            <h3>Products</h3>
+
+            ${productsHTML}
+
+        </div>
+
+        <div class="timeline">
+
+            ${timelineHTML}
+
+        </div>
+
+        <div class="total-box">
+
+            Total: ₹${order.total}
+
+        </div>
+
+        ${
+          order.status === "Delivered"
+            ? `
+            <button
+            class="review-btn"
+            onclick="openReview()">
+
+                Rate & Review
+
+            </button>
+            `
+            : ""
+        }
+
+    </div>
+    `;
+      }
+
+      function openReview() {
+        document.getElementById("reviewModal").style.display = "flex";
+      }
+
+      function submitReview() {
+        const rating = document.getElementById("rating").value;
+
+        const comment = document.getElementById("reviewText").value;
+
+        let reviews = JSON.parse(localStorage.getItem("reviews")) || [];
+
+        reviews.push({
+          orderId: order.orderId,
+
+          rating,
+
+          comment,
+
+          date: new Date().toLocaleString(),
+        });
+
+        localStorage.setItem("reviews", JSON.stringify(reviews));
+
+        alert("Review Submitted");
+
+        document.getElementById("reviewModal").style.display = "none";
+      }
+      function goProduct(id) {
+        window.location.href = "product.html?id=" + id;
+      }
+    </script>
+  </body>
+</html>

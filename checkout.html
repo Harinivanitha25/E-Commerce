@@ -1,476 +1,566 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Checkout - Nabi Store</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout - Nabi Store</title>
 
-<link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
 
-<style>
+    <style>
+      .checkout-page {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 20px;
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 30px;
+      }
 
-.checkout-page{
-    max-width:1200px;
-    margin:40px auto;
-    padding:20px;
-    display:grid;
-    grid-template-columns:1fr 400px;
-    gap:30px;
-}
+      .checkout-left,
+      .checkout-right {
+        background: white;
+        border-radius: 25px;
+        padding: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      }
 
-.checkout-left,
-.checkout-right{
-    background:white;
-    border-radius:25px;
-    padding:30px;
-    box-shadow:0 4px 20px rgba(0,0,0,0.05);
-}
+      .checkout-title {
+        font-size: 32px;
+        margin-bottom: 25px;
+        font-weight: 700;
+      }
 
-.checkout-title{
-    font-size:32px;
-    margin-bottom:25px;
-    font-weight:700;
-}
+      .form-group {
+        margin-bottom: 20px;
+      }
 
-.form-group{
-    margin-bottom:20px;
-}
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 14px;
+        outline: none;
+        font-size: 15px;
+        margin-bottom: 15px;
+        transition: 0.3s;
+      }
 
-.form-group input,
-.form-group textarea{
-    width:100%;
-    padding:15px;
-    border:1px solid #ddd;
-    border-radius:14px;
-    outline:none;
-    font-size:15px;
-    margin-bottom:15px;
-    transition:0.3s;
-}
+      .form-group input:focus,
+      .form-group textarea:focus {
+        border-color: #111827;
+      }
 
-.form-group input:focus,
-.form-group textarea:focus{
-    border-color:#111827;
-}
+      .form-group textarea {
+        resize: none;
+        height: 120px;
+      }
 
-.form-group textarea{
-    resize:none;
-    height:120px;
-}
+      .payment-methods {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 20px;
+      }
 
-.payment-methods{
-    display:flex;
-    flex-direction:column;
-    gap:15px;
-    margin-top:20px;
-}
+      .payment-option {
+        border: 1px solid #ddd;
+        border-radius: 14px;
+        padding: 18px 20px;
 
-.payment-option{
-    border:1px solid #ddd;
-    border-radius:14px;
-    padding:18px 20px;
+        display: flex;
+        align-items: center;
 
-    display:flex;
-    align-items:center;
+        gap: 15px;
 
-    gap:15px;
+        cursor: pointer;
 
-    cursor:pointer;
+        transition: 0.3s;
+      }
 
-    transition:0.3s;
-}
+      .payment-option:hover {
+        border-color: #111827;
+        background: #f9f9f9;
+      }
 
-.payment-option:hover{
-    border-color:#111827;
-    background:#f9f9f9;
-}
+      .payment-option input[type="radio"] {
+        width: 18px;
+        height: 18px;
 
-.payment-option input[type="radio"]{
-    width:18px;
-    height:18px;
+        margin: 0;
 
-    margin:0;
+        accent-color: #111827;
 
-    accent-color:#111827;
+        cursor: pointer;
 
-    cursor:pointer;
+        flex-shrink: 0;
+      }
 
-    flex-shrink:0;
-}
+      .payment-option span {
+        display: flex;
+        align-items: center;
 
-.payment-option span{
-    display:flex;
-    align-items:center;
+        font-size: 17px;
+        font-weight: 500;
 
-    font-size:17px;
-    font-weight:500;
+        color: #111827;
 
-    color:#111827;
+        line-height: 1.2;
+      }
 
-    line-height:1.2;
-}
+      .order-summary-item {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 15px;
+        color: #555;
+        font-size: 15px;
+      }
 
-.order-summary-item{
-    display:flex;
-    justify-content:space-between;
-    margin-top:15px;
-    color:#555;
-    font-size:15px;
-}
+      .summary-total {
+        border-top: 1px solid #ddd;
+        margin-top: 20px;
+        padding-top: 20px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 24px;
+        font-weight: 700;
+      }
 
-.summary-total{
-    border-top:1px solid #ddd;
-    margin-top:20px;
-    padding-top:20px;
-    display:flex;
-    justify-content:space-between;
-    font-size:24px;
-    font-weight:700;
-}
+      .place-order-btn {
+        width: 100%;
+        margin-top: 30px;
+        padding: 16px;
+        border: none;
+        border-radius: 14px;
+        background: #111827;
+        color: white;
+        font-size: 17px;
+        cursor: pointer;
+        font-weight: 700;
+        transition: 0.3s;
+      }
 
-.place-order-btn{
-    width:100%;
-    margin-top:30px;
-    padding:16px;
-    border:none;
-    border-radius:14px;
-    background:#111827;
-    color:white;
-    font-size:17px;
-    cursor:pointer;
-    font-weight:700;
-    transition:0.3s;
-}
+      .place-order-btn:hover {
+        background: black;
+        transform: translateY(-2px);
+      }
 
-.place-order-btn:hover{
-    background:black;
-    transform:translateY(-2px);
-}
+      .secure-box {
+        margin-top: 25px;
+        background: #f8f8f8;
+        padding: 18px;
+        border-radius: 14px;
+        text-align: center;
+        color: #555;
+        font-size: 14px;
+      }
 
-.secure-box{
-    margin-top:25px;
-    background:#f8f8f8;
-    padding:18px;
-    border-radius:14px;
-    text-align:center;
-    color:#555;
-    font-size:14px;
-}
+      .checkout-product {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        padding: 18px 0;
+        border-bottom: 1px solid #eee;
+      }
 
-.checkout-product{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:15px;
-    padding:18px 0;
-    border-bottom:1px solid #eee;
-}
+      .checkout-product-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex: 1;
+      }
 
-.checkout-product-left{
-    display:flex;
-    align-items:center;
-    gap:15px;
-    flex:1;
-}
+      .checkout-product-img {
+        width: 85px;
+        height: 85px;
+        object-fit: cover;
+        border-radius: 14px;
+        background: #f5f5f5;
+        border: 1px solid #eee;
+        padding: 5px;
+      }
 
-.checkout-product-img{
-    width:85px;
-    height:85px;
-    object-fit:cover;
-    border-radius:14px;
-    background:#f5f5f5;
-    border:1px solid #eee;
-    padding:5px;
-}
+      .checkout-product h4 {
+        font-size: 16px;
+        margin-bottom: 6px;
+        color: #111827;
+      }
 
-.checkout-product h4{
-    font-size:16px;
-    margin-bottom:6px;
-    color:#111827;
-}
+      .checkout-product p {
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 6px;
+      }
 
-.checkout-product p{
-    color:#666;
-    font-size:14px;
-    margin-bottom:6px;
-}
+      .checkout-price {
+        font-size: 18px;
+        font-weight: 700;
+        color: #111827;
+        min-width: 90px;
+        text-align: right;
+      }
 
-.checkout-price{
-    font-size:18px;
-    font-weight:700;
-    color:#111827;
-    min-width:90px;
-    text-align:right;
-}
+      .free-delivery {
+        color: green;
+        font-size: 13px;
+        font-weight: 600;
+      }
 
-.free-delivery{
-    color:green;
-    font-size:13px;
-    font-weight:600;
-}
+      .paid-delivery {
+        color: #d11a2a;
+        font-size: 13px;
+        font-weight: 600;
+      }
 
-.paid-delivery{
-    color:#d11a2a;
-    font-size:13px;
-    font-weight:600;
-}
+      .checkout-qty {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 8px 0px;
+      }
 
+      .checkout-qty button {
+        background: #f3f4f6;
+        border: none;
+        width: 22px;
+        height: 22px;
+        border-radius: 5px;
+      }
 
-@media(max-width:900px){
+      .checkout-qty button:hover {
+        background: #e3e4e4;
+        border-color: #9ca3af;
+      }
 
-    .checkout-page{
-        grid-template-columns:1fr;
-    }
-}
+      .checkout-qty span {
+        min-width: 25px;
+        text-align: center;
+        font-size: 15px;
+        font-weight: 600;
+        color: #111827;
+      }
 
-@media(max-width:768px){
+      .remove-item-btn {
+        background: none !important;
+        border: none !important;
+        color: #6b7280 !important;
+        padding: 0 !important;
+        margin-left: 8px;
+        font-size: 14px !important;
+        font-weight: 500;
+        width: auto !important;
+        height: auto !important;
+        cursor: pointer;
+      }
 
-    .checkout-page{
-        padding:15px;
-    }
+      .remove-item-btn:hover {
+        color: #dc2626 !important;
+        text-decoration: underline;
+      }
 
-    .checkout-left,
-    .checkout-right{
-        padding:20px;
-    }
+      @media (max-width: 900px) {
+        .checkout-page {
+          grid-template-columns: 1fr;
+        }
+      }
 
-    .checkout-title{
-        font-size:26px;
-    }
+      @media (max-width: 768px) {
+        .checkout-page {
+          padding: 15px;
+        }
 
-    .summary-total{
-        font-size:20px;
-    }
+        .checkout-left,
+        .checkout-right {
+          padding: 20px;
+        }
 
-    .checkout-product{
-        align-items:flex-start;
-    }
+        .checkout-title {
+          font-size: 26px;
+        }
 
-    .checkout-product-img{
-        width:70px;
-        height:70px;
-    }
+        .summary-total {
+          font-size: 20px;
+        }
 
-    .checkout-price{
-        font-size:16px;
-    }
-}
+        .checkout-product {
+          align-items: flex-start;
+        }
 
-</style>
-</head>
-<div id="toast"></div>
-<body>
+        .checkout-product-img {
+          width: 70px;
+          height: 70px;
+        }
 
-<header class="top-header">
-    <div class="logo">
+        .checkout-price {
+          font-size: 16px;
+        }
+      }
+    </style>
+  </head>
+  <div id="toast"></div>
+  <body>
+    <header class="top-header">
+      <div class="logo">
         <span class="black">Nabi</span>
         <span class="orange">Store</span>
-    </div>
+      </div>
 
-    <button class="cart-btn" onclick="goHome()">
-        Back To Shop
-    </button>
-</header>
+      <button class="cart-btn" onclick="goHome()">Back To Shop</button>
+    </header>
 
-<div class="checkout-page">
-    <div class="checkout-left">
-        <h1 class="checkout-title">
-            Delivery Address
-        </h1>
-     <div class="form-group">
-        <input type="text" id="fullName" placeholder="Enter your full name">
-        <input type="tel" id="phone" placeholder="Enter phone number">
-        <textarea id="address" placeholder="House no, Street, Area"></textarea>
-        <input type="text" id="city" placeholder="Enter city">
-        <input type="text" id="pincode" placeholder="Enter pincode">
-    </div>
+    <div class="checkout-page">
+      <div class="checkout-left">
+        <h1 class="checkout-title">Delivery Address</h1>
+        <div class="form-group">
+          <input type="text" id="fullName" placeholder="Enter your full name" />
+          <input type="tel" id="phone" placeholder="Enter phone number" />
+          <textarea
+            id="address"
+            placeholder="House no, Street, Area"
+          ></textarea>
+          <input type="text" id="city" placeholder="Enter city" />
+          <input type="text" id="pincode" placeholder="Enter pincode" />
+        </div>
 
         <div class="form-group">
-            <label>Payment Method</label>
+          <label>Payment Method</label>
 
-            <div class="payment-methods">
-                <label class="payment-option">
-                    <input type="radio" name="payment" checked>
-                    Cash on Delivery
-                </label>
+          <div class="payment-methods">
+            <label class="payment-option">
+              <input type="radio" name="payment" checked />
+              Cash on Delivery
+            </label>
 
-                <label class="payment-option">
-                    <input type="radio" name="payment">
-                    Google Pay (GPay)
-                </label>
+            <label class="payment-option">
+              <input type="radio" name="payment" />
+              Google Pay (GPay)
+            </label>
 
-                <label class="payment-option">
-                    <input type="radio" name="payment">
-                    PhonePe
-                </label>
+            <label class="payment-option">
+              <input type="radio" name="payment" />
+              PhonePe
+            </label>
 
-                <label class="payment-option">
-                    <input type="radio" name="payment">
-                    Credit / Debit Card
-                </label>
+            <label class="payment-option">
+              <input type="radio" name="payment" />
+              Credit / Debit Card
+            </label>
 
-                <label class="payment-option">
-                    <input type="radio" name="payment">
-                    UPI Payment
-                </label>
-            </div>
+            <label class="payment-option">
+              <input type="radio" name="payment" />
+              UPI Payment
+            </label>
+          </div>
         </div>
-    </div>
+      </div>
 
-    <div class="checkout-right">
-        <h1 class="checkout-title">
-            Order Summary
-        </h1>
+      <div class="checkout-right">
+        <h1 class="checkout-title">Order Summary</h1>
         <div id="summary-items"></div>
         <div class="order-summary-item">
-            <span>Total Delivery</span>
-            <span id="delivery-total">₹0</span>
+          <span>Total Delivery</span>
+          <span id="delivery-total">₹0</span>
         </div>
         <div class="order-summary-item">
-            <span>Platform Fee</span>
-            <span>₹9</span>
+          <span>Platform Fee</span>
+          <span>₹9</span>
         </div>
         <div class="summary-total">
-            <span>Total</span>
-            <span id="final-total">₹0</span>
+          <span>Total</span>
+          <span id="final-total">₹0</span>
         </div>
-        <button class="place-order-btn"
-        onclick="placeOrder()">
-            Place Order
+        <button class="place-order-btn" onclick="placeOrder()">
+          Place Order
         </button>
-        <div class="secure-box">
-            🔒 100% Secure Payments & Safe Checkout
-        </div>
+        <div class="secure-box">🔒 100% Secure Payments & Safe Checkout</div>
+      </div>
     </div>
-</div>
 
-<script>
+    <script>
+      const loggedEmail = localStorage.getItem("loggedUserEmail") || "guest";
 
-const loggedEmail = localStorage.getItem("loggedUserEmail") || "guest";
+      const CART_KEY = `cart_${loggedEmail}`;
 
-const CART_KEY = `cart_${loggedEmail}`;
+      const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
 
-const cart = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+      const savedUser = JSON.parse(localStorage.getItem("nabiUser"));
 
-const savedUser = JSON.parse(localStorage.getItem("nabiUser"));
+      if (savedUser) {
+        document.getElementById("fullName").value = savedUser.name || "";
+        document.getElementById("phone").value = savedUser.phone || "";
+      }
 
-if(savedUser){
+      const summaryContainer = document.getElementById("summary-items");
 
-    document.getElementById("fullName").value =
-    savedUser.name || "";
-    document.getElementById("phone").value =
-    savedUser.phone || "";
-}
+      let subtotal = 0;
+      let deliveryTotal = 0;
 
-const summaryContainer = document.getElementById("summary-items");
+      cart.forEach((item) => {
+        subtotal += item.price * item.quantity;
 
-let subtotal = 0;
-let deliveryTotal = 0;
+        let deliveryCharge = 0;
 
-cart.forEach(item => {
+        if (item.delivery && !item.delivery.freeDelivery) {
+          deliveryCharge = Math.floor(Math.random() * 51) + 30;
 
-    subtotal += item.price * item.quantity;
+          deliveryTotal += deliveryCharge;
+        }
+        summaryContainer.innerHTML += `
+          <div class="checkout-product">
+              <div class="checkout-product-left">
+                  <img src="${item.image}" class="checkout-product-img">
+                  <div>
+                      <h4>${item.name}</h4>
+                      <div class="checkout-qty">
 
-    let deliveryCharge = 0;
+                          <button onclick="decreaseQty(${item.id})">−</button>
 
-    if(item.delivery && !item.delivery.freeDelivery){
-        deliveryCharge =
-        Math.floor(Math.random() * 51) + 30;
+                          <span>${item.quantity}</span>
 
-        deliveryTotal += deliveryCharge;
-    }
-    summaryContainer.innerHTML += `
-    <div class="checkout-product">
-        <div class="checkout-product-left">
-            <img src="${item.image}" class="checkout-product-img">
-            <div>
-                <h4>${item.name}</h4>
-                <p>Qty: ${item.quantity}</p>
-                ${
-                    item.delivery && item.delivery.freeDelivery
-                    ?
-                    `<span class="free-delivery">
-                        Free Delivery
-                    </span>`
-                    :
-                    `<span class="paid-delivery">
-                        Delivery Charge: ₹${deliveryCharge}
-                    </span>`
-                }
-            </div>
-        </div>
-        <div class="checkout-price">
-            ₹${item.price * item.quantity}
-        </div>
-    </div>
-    `;
-});
+                          <button onclick="increaseQty(${item.id})">+</button>
 
-const platformFee = 9;
+                          <button class="remove-item-btn"
+                                  onclick="removeItem(${item.id})">
+                              Remove
+                          </button>
 
-const finalTotal =
-subtotal +
-platformFee +
-deliveryTotal;
+                      </div>
+                      ${
+                        item.delivery && item.delivery.freeDelivery
+                          ? `<span class="free-delivery">
+                              Free Delivery
+                          </span>`
+                          : `<span class="paid-delivery">
+                              Delivery Charge: ₹${deliveryCharge}
+                          </span>`
+                      }
+                  </div>
+              </div>
+              <div class="checkout-price">
+                  ₹${item.price * item.quantity}
+              </div>
+          </div>
+          `;
+      });
 
-document.getElementById("delivery-total").innerText = deliveryTotal === 0 ? "FREE" : `₹${deliveryTotal}`;
+      const platformFee = 9;
 
-document.getElementById("final-total").innerText = `₹${finalTotal}`;
+      const finalTotal = subtotal + platformFee + deliveryTotal;
 
-function goHome(){
-    window.location.href = "index.html";
-}
+      document.getElementById("delivery-total").innerText =
+        deliveryTotal === 0 ? "FREE" : `₹${deliveryTotal}`;
 
-function showToast(message){
-    const toast = document.getElementById("toast");
-    toast.innerText = message;
-    toast.classList.add("show");
-    setTimeout(()=>{
-        toast.classList.remove("show");
-    },2500);
-}
+      document.getElementById("final-total").innerText = `₹${finalTotal}`;
 
-function placeOrder(){
-    const address = document.getElementById("address").value.trim();
+      function goHome() {
+        window.location.href = "index.html";
+      }
 
-    const city = document.getElementById("city").value.trim();
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.innerText = message;
+        toast.classList.add("show");
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, 2500);
+      }
 
-    const pincode = document.getElementById("pincode").value.trim();
-    if(address === ""){
-        showToast("Please enter address");
-        return;
-    }
+      function increaseQty(id) {
+        const item = cart.find((p) => p.id === id);
 
-    if(city === ""){
-        showToast("Please enter city");
-        return;
-    }
+        if (item) {
+          item.quantity++;
 
-    if(pincode === ""){
-        showToast("Please enter pincode");
-        return;
-    }
+          localStorage.setItem(CART_KEY, JSON.stringify(cart));
 
-    if(!/^\d{6}$/.test(pincode)){
-        showToast("Enter valid 6 digit pincode");
-        return;
-    }
+          location.reload();
+        }
+      }
 
-    if(cart.length === 0){
-        showToast("Your cart is empty");
-        return;
-    }
-    showToast("Order placed successfully");
-    setTimeout(()=>{
+      function decreaseQty(id) {
+        const item = cart.find((p) => p.id === id);
+
+        if (item) {
+          if (item.quantity > 1) {
+            item.quantity--;
+          } else {
+            cart.splice(cart.indexOf(item), 1);
+          }
+
+          localStorage.setItem(CART_KEY, JSON.stringify(cart));
+
+          location.reload();
+        }
+      }
+
+      function removeItem(id) {
+        const updatedCart = cart.filter((item) => item.id !== id);
+
+        localStorage.setItem(CART_KEY, JSON.stringify(updatedCart));
+
+        location.reload();
+      }
+
+      function placeOrder() {
+        const fullName = document.getElementById("fullName").value.trim();
+
+        const city = document.getElementById("city").value.trim();
+
+        const pincode = document.getElementById("pincode").value.trim();
+
+        const address = document.getElementById("address").value.trim();
+
+        if (!address || !city || !pincode) {
+          showToast("Please fill address details");
+          return;
+        }
+
+        // GET PAYMENT METHOD
+
+        const payment = document.querySelector('input[name="payment"]:checked');
+
+        let paymentMethod = "Cash On Delivery";
+
+        if (payment) {
+          paymentMethod = payment.parentElement.innerText.trim();
+        }
+
+        const ORDER_KEY = `orders_${loggedEmail}`;
+
+        let orders = JSON.parse(localStorage.getItem(ORDER_KEY)) || [];
+
+        const order = {
+          orderId: "NABI" + Date.now(),
+
+          date: new Date().toLocaleString(),
+
+          status: "Ordered",
+
+          products: cart,
+
+          total: finalTotal,
+
+          address: address,
+
+          city: city,
+
+          pincode: pincode,
+
+          customer: fullName,
+
+          payment: paymentMethod, // <-- ADDED
+        };
+
+        orders.unshift(order);
+
+        localStorage.setItem(ORDER_KEY, JSON.stringify(orders));
 
         localStorage.removeItem(CART_KEY);
 
-        window.location.href =
-        "success.html";
-
-    },1000);
-}
-</script>
-
-</body>
+        window.location.href = "success.html";
+      }
+    </script>
+  </body>
 </html>
